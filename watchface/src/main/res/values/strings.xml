@@ -1,17 +1,6 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
     <string name="app_name">Wearable</string>
-    <string name="watchface_name">My Sunshine Watch Face</string>
-
-    <string name="am">am</string>
-    <string name="pm">pm</string>
-
-    <string name="sunday">SUN</string>
-    <string name="monday">MON</string>
-    <string name="tuesday">TUE</string>
-    <string name="wednesday">WED</string>
-    <string name="thursday">THU</string>
-    <string name="friday">FRI</string>
-    <string name="saturday">SAT</string>
+    <string name="watchface_label">Sunshine Watch Face</string>
 
     <string name="january">JAN</string>
     <string name="february">FEB</string>
@@ -25,4 +14,15 @@
     <string name="october">OCT</string>
     <string name="november">NOV</string>
     <string name="december">DEC</string>
+    <string name="sunday">SUN</string>
+    <string name="monday">MON</string>
+    <string name="tuesday">TUE</string>
+    <string name="wednesday">WED</string>
+    <string name="thursday">THU</string>
+    <string name="friday">FRI</string>
+    <string name="saturday">SAT</string>
+
+    <string name="am">am</string>
+    <string name="pm">pm</string>
+
 </resources>

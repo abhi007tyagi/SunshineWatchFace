@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tyagiabhinav.watchface">
+    package="com.example.android.sunshine.app">
 
     <uses-feature android:name="android.hardware.type.watch" />
 
@@ -13,8 +13,8 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
 
-        <service android:name="com.example.android.sunshine.watchface.WatchFaceService"
-            android:label="Tuts+ Wear Watch Face"
+        <service android:name="com.example.android.sunshine.app.WatchFaceService"
+            android:label="@string/watchface_label"
             android:permission="android.permission.BIND_WALLPAPER">
 
             <meta-data

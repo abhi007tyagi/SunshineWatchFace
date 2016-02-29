@@ -1,4 +1,4 @@
-package com.example.android.sunshine.watchface;
+package com.example.android.sunshine.app;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,7 +35,6 @@ import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
-import com.tyagiabhinav.watchface.R;
 
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
@@ -77,7 +76,7 @@ public class WatchFaceService extends CanvasWatchFaceService {
             GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
         private static final String WEATHER_PATH = "/weather";
-        private static final String WEATHER_INFO_PATH = "/weather-info";
+        private static final String WEATHER_DATA_PATH = "/weather_data";
 
         private static final String KEY_UUID = "uuid";
         private static final String KEY_HIGH = "high";
@@ -379,7 +378,7 @@ public class WatchFaceService extends CanvasWatchFaceService {
             Log.d(TAG, "Bound_X->" + bounds.centerX() + "; xOffsetTime->" + xOffsetTime + "; xOffsetAMPM->" + xOffsetAMPM + "; textPaint->" + mTextPaint.measureText(timeText));
 
             if(!is24Hour) {
-                String amPmText = Util.getAmPmString(getResources(), am_pm);
+                String amPmText = com.example.android.sunshine.app.Util.getAmPmString(getResources(), am_pm);
                 canvas.drawText(timeText, xOffsetTime, mTimeYOffset, mTextPaint);
                 canvas.drawText(amPmText, xOffsetAMPM, mTimeYOffset, mAMPMPaint);
             }
@@ -399,7 +398,7 @@ public class WatchFaceService extends CanvasWatchFaceService {
                     canvas.drawText(mWeatherHigh, xOffset+7, mWeatherYOffset, mTextTempHighPaint);
                     canvas.drawText(mWeatherLow, bounds.centerX() + (highTextLen / 2) + 21, mWeatherYOffset, mTextTempLowPaint);
                     float iconXOffset = bounds.centerX() - ((highTextLen / 2) + mWeatherIcon.getWidth() + 21);
-                    canvas.drawBitmap(mWeatherIcon, iconXOffset + 9, (mIconYOffset - mWeatherIcon.getHeight()+11), null);
+                    canvas.drawBitmap(mWeatherIcon, iconXOffset + 9, (mIconYOffset - ((11f/10)*mWeatherIcon.getHeight())), null);
                 }
             }
         }
@@ -533,35 +532,25 @@ public class WatchFaceService extends CanvasWatchFaceService {
                     DataMap dataMap = DataMapItem.fromDataItem(dataEvent.getDataItem()).getDataMap();
                     String path = dataEvent.getDataItem().getUri().getPath();
                     Log.d(TAG, "on Data Changed..."+path);
-                    if (path.equals(WEATHER_INFO_PATH)) {
+                    if (path.equals(WEATHER_DATA_PATH)) {
                         if (dataMap.containsKey(KEY_HIGH)) {
-                            mWeatherHigh = dataMap.getString(KEY_HIGH)+"°";
+                            mWeatherHigh = dataMap.getString(KEY_HIGH);
                             Log.d(TAG, "High->" + mWeatherHigh);
-                        } else {
-                            Log.d(TAG, "High->Empty");
                         }
-
                         if (dataMap.containsKey(KEY_LOW)) {
-                            mWeatherLow = dataMap.getString(KEY_LOW)+"°";
+                            mWeatherLow = dataMap.getString(KEY_LOW);
                             Log.d(TAG, "Low->" + mWeatherLow);
-                        } else {
-                            Log.d(TAG, "Low->Empty");
                         }
-
                         if (dataMap.containsKey(KEY_WEATHER_ID)) {
                             int weatherId = dataMap.getInt(KEY_WEATHER_ID);
-                            Drawable b = getResources().getDrawable(Util.getIconResourceForWeatherCondition(weatherId));
+                            Drawable b = getResources().getDrawable(com.example.android.sunshine.app.Util.getIconResourceForWeatherCondition(weatherId));
                             Bitmap icon = ((BitmapDrawable) b).getBitmap();
                             float scaledWidth = (mTextTempHighPaint.getTextSize() / icon.getHeight()) * icon.getWidth();
                             mWeatherIcon = Bitmap.createScaledBitmap(icon, (int) scaledWidth, (int) mTextTempHighPaint.getTextSize(), true);
-
-                        } else {
-                            Log.d(TAG, "Empty WeatherId");
                         }
-
                         invalidate();
                     }
-                    //for testing
+                    //for testing UI
 //                    mWeatherHigh = "16°";
 //                    mWeatherLow = "7°";
 //
@@ -594,9 +583,9 @@ public class WatchFaceService extends CanvasWatchFaceService {
                         @Override
                         public void onResult(DataApi.DataItemResult dataItemResult) {
                             if (!dataItemResult.getStatus().isSuccess()) {
-                                Log.d(TAG, "Failed asking phone for weather data");
+                                Log.d(TAG, "Failed");
                             } else {
-                                Log.d(TAG, "Successfully asked for weather data");
+                                Log.d(TAG, "Success");
                             }
                         }
                     });

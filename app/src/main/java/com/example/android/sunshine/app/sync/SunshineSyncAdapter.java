@@ -70,11 +70,14 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     private static final int WEATHER_NOTIFICATION_ID = 3004;
 
-    private static final String WEATHER_INFO_PATH = "/weather-info";
     private static final String KEY_UUID = "uuid";
+
+    private static final String WEATHER_DATA_PATH = "/weather_data";
+
+    private static final String KEY_WEATHER_ID = "weatherId";
     private static final String KEY_HIGH = "high";
     private static final String KEY_LOW = "low";
-    private static final String KEY_WEATHER_ID = "weatherId";
+
 
 
     private static final String[] NOTIFY_WEATHER_PROJECTION = new String[]{
@@ -411,25 +414,22 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
         mGoogleApiClient.connect();
 
-        PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(WEATHER_INFO_PATH);
-
+        PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(WEATHER_DATA_PATH);
         putDataMapRequest.getDataMap().putString(KEY_UUID, UUID.randomUUID().toString());
+        putDataMapRequest.getDataMap().putInt(KEY_WEATHER_ID, weatherId);
         putDataMapRequest.getDataMap().putString(KEY_HIGH, Utility.formatTemperature(getContext(), high));
         putDataMapRequest.getDataMap().putString(KEY_LOW, Utility.formatTemperature(getContext(), low));
-        putDataMapRequest.getDataMap().putInt(KEY_WEATHER_ID, weatherId);
-
         PutDataRequest request = putDataMapRequest.asPutDataRequest();
-
-        Log.d(LOG_TAG, "High:" + high + ", Low:" + low + ", Condition ID: " + weatherId);
+        Log.d(LOG_TAG, "High->" + high + ", Low->" + low + ", WeatherId->: " + weatherId);
 
         Wearable.DataApi.putDataItem(mGoogleApiClient, request)
                 .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
                     @Override
                     public void onResult(DataApi.DataItemResult dataItemResult) {
                         if (!dataItemResult.getStatus().isSuccess()) {
-                            Log.d(LOG_TAG, "Failed to send weather data");
+                            Log.d(LOG_TAG, "Failed");
                         } else {
-                            Log.d(LOG_TAG, "Successfully sent weather data");
+                            Log.d(LOG_TAG, "Success");
                         }
                     }
                 });

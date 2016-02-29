@@ -23,6 +23,7 @@ public class WearSyncService extends WearableListenerService {
                 String path = dataEvent.getDataItem().getUri().getPath();
                 Log.d(TAG, path);
                 if (path.equals(WEATHER_PATH)) {
+                    Log.d(TAG, "Sync Immediately");
                     SunshineSyncAdapter.syncImmediately(this);
                 }
             }

@@ -1,8 +1,8 @@
-package com.example.android.sunshine.watchface;
+package com.example.android.sunshine.app;
 
 import android.content.res.Resources;
 
-import com.tyagiabhinav.watchface.R;
+import com.example.android.sunshine.app.R;
 
 import java.util.Calendar;
 
