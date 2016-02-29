@@ -378,7 +378,7 @@ public class WatchFaceService extends CanvasWatchFaceService {
             Log.d(TAG, "Bound_X->" + bounds.centerX() + "; xOffsetTime->" + xOffsetTime + "; xOffsetAMPM->" + xOffsetAMPM + "; textPaint->" + mTextPaint.measureText(timeText));
 
             if(!is24Hour) {
-                String amPmText = com.example.android.sunshine.app.Util.getAmPmString(getResources(), am_pm);
+                String amPmText = getAmPmString(getResources(), am_pm);
                 canvas.drawText(timeText, xOffsetTime, mTimeYOffset, mTextPaint);
                 canvas.drawText(amPmText, xOffsetAMPM, mTimeYOffset, mAMPMPaint);
             }
@@ -543,7 +543,7 @@ public class WatchFaceService extends CanvasWatchFaceService {
                         }
                         if (dataMap.containsKey(KEY_WEATHER_ID)) {
                             int weatherId = dataMap.getInt(KEY_WEATHER_ID);
-                            Drawable b = getResources().getDrawable(com.example.android.sunshine.app.Util.getIconResourceForWeatherCondition(weatherId));
+                            Drawable b = getResources().getDrawable(getIconResourceForWeatherCondition(weatherId));
                             Bitmap icon = ((BitmapDrawable) b).getBitmap();
                             float scaledWidth = (mTextTempHighPaint.getTextSize() / icon.getHeight()) * icon.getWidth();
                             mWeatherIcon = Bitmap.createScaledBitmap(icon, (int) scaledWidth, (int) mTextTempHighPaint.getTextSize(), true);
@@ -612,5 +612,39 @@ public class WatchFaceService extends CanvasWatchFaceService {
                 }
             }
         }
+    }
+
+    private int getIconResourceForWeatherCondition(int weatherId) {
+        // Based on weather code data found at:
+        // http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
+        if (weatherId >= 200 && weatherId <= 232) {
+            return R.drawable.ic_storm;
+        } else if (weatherId >= 300 && weatherId <= 321) {
+            return R.drawable.ic_light_rain;
+        } else if (weatherId >= 500 && weatherId <= 504) {
+            return R.drawable.ic_rain;
+        } else if (weatherId == 511) {
+            return R.drawable.ic_snow;
+        } else if (weatherId >= 520 && weatherId <= 531) {
+            return R.drawable.ic_rain;
+        } else if (weatherId >= 600 && weatherId <= 622) {
+            return R.drawable.ic_snow;
+        } else if (weatherId >= 701 && weatherId <= 761) {
+            return R.drawable.ic_fog;
+        } else if (weatherId == 761 || weatherId == 781) {
+            return R.drawable.ic_storm;
+        } else if (weatherId == 800) {
+            return R.drawable.ic_clear;
+        } else if (weatherId == 801) {
+            return R.drawable.ic_light_clouds;
+        } else if (weatherId >= 802 && weatherId <= 804) {
+            return R.drawable.ic_cloudy;
+        }
+        return -1;
+    }
+
+    private String getAmPmString(Resources resources, int am_pm) {
+        return am_pm == Calendar.AM ?
+                resources.getString(R.string.am) : resources.getString(R.string.pm);
     }
 }
